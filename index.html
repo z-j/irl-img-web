@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visa Processing Statistics</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .chart-container {
+            max-width: 800px;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Visa Processing Statistics</h1>
+        <div class="select-container" style="margin-bottom: 20px;">
+            <select id="locationSelect" style="padding: 8px; font-size: 16px;">
+                <option value="Ireland">Ireland</option>
+                <option value="India">India</option>
+                <option value="UAE">UAE</option>
+            </select>
+        </div>
+        <div class="chart-container">
+            <canvas id="visaChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <canvas id="approvalChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Data for different locations
+        const locationData = {
+            Ireland: {
+                processing: [150, 230, 180, 290],
+                approved: [120, 180, 150, 250],
+                rejected: [30, 50, 30, 40]
+            },
+            India: {
+                processing: [280, 350, 420, 390],
+                approved: [250, 300, 380, 340],
+                rejected: [30, 50, 40, 50]
+            },
+            UAE: {
+                processing: [100, 150, 180, 200],
+                approved: [85, 130, 160, 180],
+                rejected: [15, 20, 20, 20]
+            }
+        };
+
+        let visaChart, approvalChart;
+
+        function updateCharts(location) {
+            const data = locationData[location];
+            
+            // Update processing data
+            visaChart.data.datasets[0].data = data.processing;
+            visaChart.update();
+
+            // Update approval/rejection data
+            approvalChart.data.datasets[0].data = data.approved;
+            approvalChart.data.datasets[1].data = data.rejected;
+            approvalChart.update();
+        }
+
+        // Chart configurations
+        const processingData = {
+            labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+            datasets: [{
+                label: 'Processed Visas',
+                data: locationData.Ireland.processing,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        };
+
+        const approvalData = {
+            labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+            datasets: [
+                {
+                    label: 'Approved Visas',
+                    data: locationData.Ireland.approved,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Rejected Visas',
+                    data: locationData.Ireland.rejected,
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }
+            ]
+        };
+
+        // Chart configurations
+        const processingConfig = {
+            type: 'bar',
+            data: processingData,
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Weekly Visa Processing Statistics'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Visas Processed'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Week'
+                        }
+                    }
+                }
+            }
+        };
+
+        const approvalConfig = {
+            type: 'bar',
+            data: approvalData,
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Visa Approval/Rejection Statistics'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Visas'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Week'
+                        }
+                    }
+                }
+            }
+        };
+
+        // Create the charts
+        const ctx1 = document.getElementById('visaChart').getContext('2d');
+        const ctx2 = document.getElementById('approvalChart').getContext('2d');
+        visaChart = new Chart(ctx1, processingConfig);
+        approvalChart = new Chart(ctx2, approvalConfig);
+
+        // Add event listener for dropdown changes
+        document.getElementById('locationSelect').addEventListener('change', function(e) {
+            updateCharts(e.target.value);
+        });
+    </script>
+</body>
+</html>
