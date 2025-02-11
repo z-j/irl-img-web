@@ -5,32 +5,90 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Visa Processing Statistics</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .container {
-            width: 80%;
-            margin: 0 auto;
-            padding: 20px;
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb;
         }
-        .chart-container {
-            max-width: 800px;
-            margin: 20px auto;
+        
+        .card {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .select-wrapper {
+            position: relative;
+            width: 200px;
+        }
+
+        .custom-select {
+            width: 100%;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #e5e7eb;
+            background-color: white;
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+            color: #374151;
+            appearance: none;
+            cursor: pointer;
+        }
+
+        .custom-select:focus {
+            outline: 2px solid #2563eb;
+            outline-offset: 2px;
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>Visa Processing Statistics</h1>
-        <div class="select-container" style="margin-bottom: 20px;">
-            <select id="locationSelect" style="padding: 8px; font-size: 16px;">
-                <option value="Ireland">Ireland</option>
-                <option value="India">India</option>
-                <option value="UAE">UAE</option>
-            </select>
+<body class="p-8">
+    <div class="max-w-5xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8 text-gray-900">Visa Processing Statistics</h1>
+        
+        <div class="card">
+            <div class="flex justify-between items-end mb-6">
+                <div>
+                    <label for="locationSelect" class="block text-sm font-medium text-gray-700 mb-2">
+                        Select Location
+                    </label>
+                    <div class="select-wrapper">
+                        <select id="locationSelect" class="custom-select">
+                            <option value="Ireland">Ireland</option>
+                            <option value="India">India</option>
+                            <option value="UAE">UAE</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label for="monthSelect" class="block text-sm font-medium text-gray-700 mb-2">
+                        Select Month
+                    </label>
+                    <div class="select-wrapper">
+                        <select id="monthSelect" class="custom-select">
+                            <option value="2024-12">December 2024</option>
+                            <option value="2025-01">January 2025</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex items-end">
+                    <button id="updateButton" 
+                            class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors">
+                        Submit
+                    </button>
+                </div>
+            </div>
         </div>
-        <div class="chart-container">
+
+        <div class="card">
             <canvas id="visaChart"></canvas>
         </div>
-        <div class="chart-container">
+
+        <div class="card">
             <canvas id="approvalChart"></canvas>
         </div>
     </div>
@@ -167,9 +225,20 @@
         visaChart = new Chart(ctx1, processingConfig);
         approvalChart = new Chart(ctx2, approvalConfig);
 
-        // Add event listener for dropdown changes
-        document.getElementById('locationSelect').addEventListener('change', function(e) {
-            updateCharts(e.target.value);
+        // Remove previous event listeners and add new submit button listener
+        document.getElementById('updateButton').addEventListener('click', function() {
+            const location = document.getElementById('locationSelect').value;
+            const [year, month] = document.getElementById('monthSelect').value.split('-');
+            const selectedDate = new Date(year, month - 1);
+            const monthName = selectedDate.toLocaleString('default', { month: 'long' });
+            
+            // Update chart labels to show weeks of selected month
+            const newLabels = [`${monthName} Week 1`, `${monthName} Week 2`, `${monthName} Week 3`, `${monthName} Week 4`];
+            visaChart.data.labels = newLabels;
+            approvalChart.data.labels = newLabels;
+            
+            // Update charts with new data
+            updateCharts(location);
         });
     </script>
 </body>
