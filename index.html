@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visa Processing Statistics</title>
+    <title>Ireland Visa Processing Statistics</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -48,7 +48,7 @@
 </head>
 <body class="p-8">
     <div class="max-w-5xl mx-auto">
-        <h1 class="text-3xl font-bold mb-8 text-gray-900">Visa Processing Statistics</h1>
+        <h1 class="text-3xl font-bold mb-8 text-gray-900">Ireland Visa Processing Statistics</h1>
         
         <div class="card">
             <div class="flex justify-between items-end mb-6">
@@ -65,15 +65,16 @@
                     </div>
                 </div>
                 <div>
-                    <label for="monthSelect" class="block text-sm font-medium text-gray-700 mb-2">
-                        Select Month
+                    <label for="startDate" class="block text-sm font-medium text-gray-700 mb-2">
+                        Select Date
                     </label>
-                    <div class="select-wrapper">
-                        <select id="monthSelect" class="custom-select">
-                            <option value="2024-12">December 2024</option>
-                            <option value="2025-01">January 2025</option>
-                        </select>
-                    </div>
+                    <input 
+                        type="date" 
+                        id="startDate" 
+                        class="custom-select"
+                        min="2024-12-01"
+                        max="2025-12-31"
+                    >
                 </div>
                 <div class="flex items-end">
                     <button id="updateButton" 
@@ -87,159 +88,8 @@
         <div class="card">
             <canvas id="visaChart"></canvas>
         </div>
-
-        <div class="card">
-            <canvas id="approvalChart"></canvas>
-        </div>
     </div>
 
-    <script>
-        // Data for different locations
-        const locationData = {
-            Ireland: {
-                processing: [150, 230, 180, 290],
-                approved: [120, 180, 150, 250],
-                rejected: [30, 50, 30, 40]
-            },
-            India: {
-                processing: [280, 350, 420, 390],
-                approved: [250, 300, 380, 340],
-                rejected: [30, 50, 40, 50]
-            },
-            UAE: {
-                processing: [100, 150, 180, 200],
-                approved: [85, 130, 160, 180],
-                rejected: [15, 20, 20, 20]
-            }
-        };
-
-        let visaChart, approvalChart;
-
-        function updateCharts(location) {
-            const data = locationData[location];
-            
-            // Update processing data
-            visaChart.data.datasets[0].data = data.processing;
-            visaChart.update();
-
-            // Update approval/rejection data
-            approvalChart.data.datasets[0].data = data.approved;
-            approvalChart.data.datasets[1].data = data.rejected;
-            approvalChart.update();
-        }
-
-        // Chart configurations
-        const processingData = {
-            labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-            datasets: [{
-                label: 'Processed Visas',
-                data: locationData.Ireland.processing,
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
-            }]
-        };
-
-        const approvalData = {
-            labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-            datasets: [
-                {
-                    label: 'Approved Visas',
-                    data: locationData.Ireland.approved,
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                },
-                {
-                    label: 'Rejected Visas',
-                    data: locationData.Ireland.rejected,
-                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    borderWidth: 1
-                }
-            ]
-        };
-
-        // Chart configurations
-        const processingConfig = {
-            type: 'bar',
-            data: processingData,
-            options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Weekly Visa Processing Statistics'
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Number of Visas Processed'
-                        }
-                    },
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Week'
-                        }
-                    }
-                }
-            }
-        };
-
-        const approvalConfig = {
-            type: 'bar',
-            data: approvalData,
-            options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Visa Approval/Rejection Statistics'
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Number of Visas'
-                        }
-                    },
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Week'
-                        }
-                    }
-                }
-            }
-        };
-
-        // Create the charts
-        const ctx1 = document.getElementById('visaChart').getContext('2d');
-        const ctx2 = document.getElementById('approvalChart').getContext('2d');
-        visaChart = new Chart(ctx1, processingConfig);
-        approvalChart = new Chart(ctx2, approvalConfig);
-
-        // Remove previous event listeners and add new submit button listener
-        document.getElementById('updateButton').addEventListener('click', function() {
-            const location = document.getElementById('locationSelect').value;
-            const [year, month] = document.getElementById('monthSelect').value.split('-');
-            const selectedDate = new Date(year, month - 1);
-            const monthName = selectedDate.toLocaleString('default', { month: 'long' });
-            
-            // Update chart labels to show weeks of selected month
-            const newLabels = [`${monthName} Week 1`, `${monthName} Week 2`, `${monthName} Week 3`, `${monthName} Week 4`];
-            visaChart.data.labels = newLabels;
-            approvalChart.data.labels = newLabels;
-            
-            // Update charts with new data
-            updateCharts(location);
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>

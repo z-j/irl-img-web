@@ -1,17 +1,48 @@
 {
     "Ireland": {
-        "processing": [150, 230, 180, 290],
-        "approved": [120, 180, 150, 250],
-        "rejected": [30, 50, 30, 40]
+        "2025-01-14": {
+            "processing": 527,
+            "approved": 241,
+            "rejected": 286
+        },
+        "2025-01-21": {
+            "processing": 488,
+            "approved": 202,
+            "rejected": 286
+        },
+        "2025-01-28": {
+            "processing": 411,
+            "approved": 218,
+            "rejected": 193
+        },
+        "2025-02-04": {
+            "processing": 399,
+            "approved": 239,
+            "rejected": 160
+        },
+        "2025-02-11": {
+            "processing": 424,
+            "approved": 261,
+            "rejected": 163
+        }
     },
     "India": {
-        "processing": [280, 350, 420, 390],
-        "approved": [250, 300, 380, 340],
-        "rejected": [30, 50, 40, 50]
+        "2024-12-01": {
+            "processing": 280,
+            "approved": 250,
+            "rejected": 30
+        },
+        "2024-12-08": {
+            "processing": 350,
+            "approved": 300,
+            "rejected": 50
+        }
     },
     "UAE": {
-        "processing": [100, 150, 180, 200],
-        "approved": [85, 130, 160, 180],
-        "rejected": [15, 20, 20, 20]
+        "2024-12-01": {
+            "processing": 100,
+            "approved": 85,
+            "rejected": 15
+        }
     }
 }
