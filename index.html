@@ -44,49 +44,97 @@
             outline: 2px solid #2563eb;
             outline-offset: 2px;
         }
+
+        /* Status result styles */
+        .status-success {
+            @apply bg-green-50 text-green-800 p-4 rounded-md border border-green-200;
+        }
+
+        .status-error {
+            @apply bg-red-50 text-red-800 p-4 rounded-md border border-red-200;
+        }
+
+        .status-loading {
+            @apply animate-pulse bg-gray-50 text-gray-800 p-4 rounded-md border border-gray-200;
+        }
     </style>
 </head>
 <body class="p-8">
     <div class="max-w-5xl mx-auto">
-        <h1 class="text-3xl font-bold mb-8 text-gray-900">Ireland Visa Processing Statistics</h1>
+        <h1 class="text-3xl font-bold mb-8 text-gray-900">Visa Processing Statistics</h1>
         
-        <div class="card">
-            <div class="flex justify-between items-end mb-6">
-                <div>
-                    <label for="locationSelect" class="block text-sm font-medium text-gray-700 mb-2">
-                        Select Location
-                    </label>
-                    <div class="select-wrapper">
-                        <select id="locationSelect" class="custom-select">
-                            <option value="Ireland">Ireland</option>
-                            <option value="India">India</option>
-                            <option value="UAE">UAE</option>
-                        </select>
+        <!-- New Application Status Card -->
+        <div class="card mb-6">
+            <div class="flex flex-col">
+                <h2 class="text-xl font-semibold mb-4 text-gray-800">Check Application Status</h2>
+                <div class="flex gap-4 items-end">
+                    <div class="flex-grow">
+                        <label for="applicationId" class="block text-sm font-medium text-gray-700 mb-2">
+                            Application ID
+                        </label>
+                        <input 
+                            type="text" 
+                            id="applicationId" 
+                            class="custom-select w-full"
+                            placeholder="Enter your application ID"
+                        >
+                    </div>
+                    <div>
+                        <button id="checkStatusButton" 
+                                class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors">
+                            Check Status
+                        </button>
                     </div>
                 </div>
-                <div>
-                    <label for="startDate" class="block text-sm font-medium text-gray-700 mb-2">
-                        Select Date
-                    </label>
-                    <input 
-                        type="date" 
-                        id="startDate" 
-                        class="custom-select"
-                        min="2024-12-01"
-                        max="2025-12-31"
-                    >
-                </div>
-                <div class="flex items-end">
-                    <button id="updateButton" 
-                            class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors">
-                        Submit
-                    </button>
+                <!-- Result area (hidden by default) -->
+                <div id="statusResult" class="mt-4 hidden">
+                    <!-- Results will be inserted here via JavaScript -->
                 </div>
             </div>
         </div>
 
+        <!-- Statistics Card -->
         <div class="card">
-            <canvas id="visaChart"></canvas>
+            <div class="flex flex-col">
+                <h2 class="text-xl font-semibold mb-4 text-gray-800">Check Stats</h2>
+                
+                <div class="flex justify-between items-end mb-6">
+                    <div>
+                        <label for="locationSelect" class="block text-sm font-medium text-gray-700 mb-2">
+                            Select Location
+                        </label>
+                        <div class="select-wrapper">
+                            <select id="locationSelect" class="custom-select">
+                                <option value="Ireland">Ireland</option>
+                                <option value="India">India</option>
+                                <option value="UAE">UAE</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="startDate" class="block text-sm font-medium text-gray-700 mb-2">
+                            Select Date
+                        </label>
+                        <input 
+                            type="date" 
+                            id="startDate" 
+                            class="custom-select"
+                            min="2024-12-01"
+                            max="2025-12-31"
+                        >
+                    </div>
+                    <div class="flex items-end">
+                        <button id="updateButton" 
+                                class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors">
+                            Submit
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <canvas id="visaChart"></canvas>
+            </div>
         </div>
     </div>
 

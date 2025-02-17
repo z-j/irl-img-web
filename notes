@@ -1,0 +1,86 @@
+
+# Visa Processing Statistics Dashboard Summary
+
+## Purpose
+Created a single-page web application to visualize visa processing statistics across different locations, showing weekly data for visa processing, approvals, and rejections.
+
+## Technical Stack
+- HTML5
+- Chart.js for visualizations
+- Tailwind CSS for styling
+- Pure JavaScript for interactivity
+- Google Fonts (Inter) for typography
+
+## Key Features
+
+### User Interface Components
+1. Location Dropdown
+   - Options: Ireland, India, UAE
+   - Styled with custom select wrapper
+
+2. Month/Year Selector
+   - Covers period: December 2024 - February 2025
+   - Formatted as "Month Year" in dropdown
+
+3. Update Button
+   - Triggers chart updates
+   - Blue-themed with hover effects
+   - Updates both charts simultaneously
+
+### Visualizations
+1. Processing Statistics Chart
+   - Bar chart showing total processed visas
+   - Weekly breakdown
+   - Blue color scheme
+
+2. Approval/Rejection Chart
+   - Bar chart showing approved (green) and rejected (red) visas
+   - Weekly breakdown
+   - Side-by-side comparison
+
+### Data Structure
+javascript
+const locationData = {
+Ireland: {
+processing: [150, 230, 180, 290],
+approved: [120, 180, 150, 250],
+rejected: [30, 50, 30, 40]
+},
+India: {
+processing: [280, 350, 420, 390],
+approved: [250, 300, 380, 340],
+rejected: [30, 50, 40, 50]
+},
+UAE: {
+processing: [100, 150, 180, 200],
+approved: [85, 130, 160, 180],
+rejected: [15, 20, 20, 20]
+}
+
+
+### Design Features
+- Card-based layout with subtle shadows
+- Responsive design with max-width constraints
+- Clean, modern interface
+- Consistent spacing and typography
+- Mobile-friendly layout
+
+### User Workflow
+1. User selects location from dropdown
+2. User selects month/year from dropdown
+3. User clicks "Update Charts" button
+4. Both charts update to show:
+   - Weekly processing numbers for selected location/month
+   - Weekly approval/rejection numbers for selected location/month
+
+### File Structure
+Single `index.html` file containing:
+- HTML structure
+- Embedded CSS styles
+- JavaScript for chart configuration and interactivity
+- CDN links for Chart.js and Tailwind CSS
+
+### Dependencies
+- Chart.js: `https://cdn.jsdelivr.net/npm/chart.js`
+- Tailwind CSS: `https://cdn.tailwindcss.com`
+- Google Fonts (Inter)

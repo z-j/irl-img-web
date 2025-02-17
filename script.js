@@ -2,7 +2,7 @@ let locationData = null;
 let visaChart;
 
 const DEFAULT_LOCATION = 'Ireland';
-const DEFAULT_WEEKS = 3;
+const DEFAULT_WEEKS = 5;
 
 // Function to populate location dropdown and set default
 function populateLocationSelect(locations) {
@@ -27,12 +27,13 @@ function getLastNWeeks(dates, n) {
     return sortedDates.slice(0, n); // Get last n dates
 }
 
-// Function to format date as "DD - MMM"
+// Function to format date as DD-MMM-YYYY
 function formatDate(dateString) {
     const date = new Date(dateString);
-    const day = date.getDate();
+    const day = date.getDate().toString().padStart(2, '0');
     const month = date.toLocaleString('default', { month: 'short' });
-    return `${day} - ${month}`;
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
 }
 
 // Function to get data for selected date range
@@ -180,6 +181,43 @@ async function loadData() {
     }
 }
 
+// Function to check application status
+async function checkApplicationStatus(applicationId) {
+    try {
+        const baseUrl = 'https://odzvx636kd.execute-api.eu-west-1.amazonaws.com/prod/getstatus';
+        const url = `${baseUrl}?application_id=${encodeURIComponent(applicationId)}`;
+        
+        const response = await fetch(url);
+        const data = await response.json();
+        console.log('Data:', data);
+        
+        return data;
+    } catch (error) {
+        console.error('Error checking status:', error);
+        throw error;
+    }
+}
+
+// Function to display status result
+function displayStatus(result) {
+    const statusResult = document.getElementById('statusResult');
+    statusResult.innerHTML = ''; // Clear previous results
+    
+    if (result.status === 'success') {
+        const formattedDate = formatDate(result.data.extraction_date);
+        statusResult.className = 'mt-4 status-success';
+        statusResult.textContent = `🎉 Congratulations! 🎊 Your application was ${result.data.decision.toLowerCase()} on ${formattedDate} ✅`;
+    } else if (result.status === 'not_found') {
+        statusResult.className = 'mt-4 status-error';
+        statusResult.textContent = result.message;
+    } else {
+        statusResult.className = 'mt-4 status-error';
+        statusResult.textContent = result.error || 'Failed to retrieve status';
+    }
+    
+    statusResult.classList.remove('hidden');
+}
+
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
     loadData().then(success => {
@@ -205,5 +243,30 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         updateCharts(location, startDate, currentDate);
+    });
+
+    // Add status check button handler
+    document.getElementById('checkStatusButton').addEventListener('click', async function() {
+        const applicationId = document.getElementById('applicationId').value.trim();
+        
+        if (!applicationId) {
+            alert('Please enter an application ID');
+            return;
+        }
+
+        const statusResult = document.getElementById('statusResult');
+        statusResult.className = 'mt-4 status-loading';
+        statusResult.textContent = 'Checking status...';
+        statusResult.classList.remove('hidden');
+
+        try {
+            const result = await checkApplicationStatus(applicationId);
+            displayStatus(result);
+        } catch (error) {
+            displayStatus({
+                success: false,
+                message: 'Failed to check status. Please try again later.'
+            });
+        }
     });
 }); 
