@@ -206,7 +206,11 @@ function displayStatus(result) {
     if (result.status === 'success') {
         const formattedDate = formatDate(result.data.extraction_date);
         statusResult.className = 'mt-4 status-success';
-        statusResult.textContent = `🎉 Congratulations! 🎊 Your application was ${result.data.decision.toLowerCase()} on ${formattedDate} ✅`;
+        if (result.data.decision.toLowerCase() === 'approved') {
+            statusResult.textContent = `🎉 Congratulations! 🎊 Your application was approved on ${formattedDate} ✅`;
+        } else if (result.data.decision.toLowerCase() === 'refused') {
+            statusResult.textContent = `We regret to inform you that your application was refused on ${formattedDate}`;
+        }
     } else if (result.status === 'not_found') {
         statusResult.className = 'mt-4 status-error';
         statusResult.textContent = result.message;
