@@ -29,6 +29,11 @@
             "processing": 434,
             "approved": 240,
             "rejected": 194
+        },
+        "2025-02-27": {
+            "processing": 266,
+            "approved": 95,
+            "rejected": 171
         }
     }
 }
